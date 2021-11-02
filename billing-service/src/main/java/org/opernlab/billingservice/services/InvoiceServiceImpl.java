@@ -35,23 +35,30 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setId(UUID.randomUUID().toString());
         invoice.setDate(new Date());
         //Verification de l'integrité referentiel : est ce que le customer existe? a faire!
+        Customer customer = customerRestClient.getCustomer(invoice.getCustomerID());
+
+        invoice.setCustomer(customer);
         Invoice savedInvoice = invoiceRepository.save(invoice);
 
-        return invoiceMapper.invoiceResponseDTOFromInvoice(savedInvoice);
+        InvoiceResponseDTO invoiceResponseDTO = invoiceMapper.invoiceResponseDTOFromInvoice(savedInvoice);
+        return invoiceResponseDTO;
     }
 
     @Override
     public InvoiceResponseDTO getInvoice(String invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId).get();
-        Customer customer = customerRestClient.getCustomer(invoice.getCustomerId());
+        Customer customer = customerRestClient.getCustomer(invoice.getCustomerID());
         invoice.setCustomer(customer);
         return invoiceMapper.invoiceResponseDTOFromInvoice(invoice);
     }
 
     @Override
     public List<InvoiceResponseDTO> getInvoicesByCustomer(String customerId) {
-        List<Invoice> invoices = invoiceRepository.findByCustomerId(customerId);
-
+        List<Invoice> invoices = invoiceRepository.findByCustomerID(customerId);
+        invoices.forEach(invoice -> {
+            Customer customer = customerRestClient.getCustomer(invoice.getCustomerID());
+            invoice.setCustomer(customer);
+        });
         return invoices.stream()
                 .map(invoice -> invoiceMapper.invoiceResponseDTOFromInvoice(invoice))
                 .collect(Collectors.toList());
@@ -61,7 +68,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceResponseDTO> allInvoices() {
         List<Invoice> invoices = invoiceRepository.findAll();
         for(Invoice invoice : invoices){
-            Customer customer = customerRestClient.getCustomer(invoice.getCustomerId());
+            Customer customer = customerRestClient.getCustomer(invoice.getCustomerID());
             invoice.setCustomer(customer);
         }
         return invoices.stream().map(invoice -> invoiceMapper.invoiceResponseDTOFromInvoice(invoice))
