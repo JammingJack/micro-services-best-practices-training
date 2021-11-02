@@ -4,6 +4,7 @@ import org.opernlab.billingservice.dto.InvoiceRequestDTO;
 import org.opernlab.billingservice.dto.InvoiceResponseDTO;
 import org.opernlab.billingservice.entities.Customer;
 import org.opernlab.billingservice.entities.Invoice;
+import org.opernlab.billingservice.exceptions.CustomerNotFoundException;
 import org.opernlab.billingservice.mappers.InvoiceMapper;
 import org.opernlab.billingservice.openfeign.CustomerRestClient;
 import org.opernlab.billingservice.repositories.InvoiceRepository;
@@ -34,12 +35,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceMapper.invoiceFromInvoiceRequestDTO(invoiceRequestDTO);
         invoice.setId(UUID.randomUUID().toString());
         invoice.setDate(new Date());
-        //Verification de l'integrité referentiel : est ce que le customer existe? a faire!
-        Customer customer = customerRestClient.getCustomer(invoice.getCustomerID());
-
-        invoice.setCustomer(customer);
+        //Verification de l'integrité referentiel : est ce que le customer existe?
+        Customer customer;
+        try {
+            customer = customerRestClient.getCustomer(invoiceRequestDTO.getCustomerID());
+        }catch(Exception e){
+            throw new CustomerNotFoundException("Customer not found in customer_db");
+        }
         Invoice savedInvoice = invoiceRepository.save(invoice);
-
+        savedInvoice.setCustomer(customer);
         InvoiceResponseDTO invoiceResponseDTO = invoiceMapper.invoiceResponseDTOFromInvoice(savedInvoice);
         return invoiceResponseDTO;
     }

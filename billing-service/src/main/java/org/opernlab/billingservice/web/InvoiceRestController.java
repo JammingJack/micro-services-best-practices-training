@@ -4,6 +4,8 @@ import org.opernlab.billingservice.dto.InvoiceRequestDTO;
 import org.opernlab.billingservice.dto.InvoiceResponseDTO;
 import org.opernlab.billingservice.repositories.InvoiceRepository;
 import org.opernlab.billingservice.services.InvoiceService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,5 +35,10 @@ public class InvoiceRestController {
     @GetMapping(path="/invoices")
     public List<InvoiceResponseDTO> allInvoices(){
         return invoiceService.allInvoices();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exceptionHandler(Exception e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
