@@ -36,8 +36,10 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/spring-expression/5.3.12/spring-expression-5.3.12-sources.jar!/" />
