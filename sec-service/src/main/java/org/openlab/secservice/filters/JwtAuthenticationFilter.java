@@ -65,6 +65,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
         };
         response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getOutputStream(), tokenMap);
+        new ObjectMapper().writeValue(response.getOutputStream(),tokenMap);
     }
 }
