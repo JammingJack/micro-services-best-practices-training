@@ -37,8 +37,10 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/springFramework/security/spring-security-crypto/5.5.3/spring-security-crypto-5.5.3-sources.jar!/" />

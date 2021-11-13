@@ -1,9 +1,11 @@
 package org.openlab.secservice;
 
 import org.openlab.secservice.entities.AppUser;
+import org.openlab.secservice.filters.JwtAuthenticationFilter;
 import org.openlab.secservice.services.AccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,10 +26,10 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
-public class SecurtyConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AccountService accountService;
 
-    public SecurtyConfig(AccountService accountService) {
+    public SecurityConfig(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -65,6 +67,11 @@ public class SecurtyConfig extends WebSecurityConfigurerAdapter {
         //http.formLogin();
         http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
+        http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()));
     }
-
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }
