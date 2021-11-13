@@ -4,6 +4,7 @@ import org.openlab.secservice.entities.AppRole;
 import org.openlab.secservice.entities.AppUser;
 import org.openlab.secservice.repositories.AppRoleRepository;
 import org.openlab.secservice.repositories.AppUserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public class AccountServiceImpl implements AccountService {
     private AppRoleRepository appRoleRepository;
     private PasswordEncoder passwordEncoder;
 
-    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder) {
+    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository,@Lazy PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.passwordEncoder = passwordEncoder;
