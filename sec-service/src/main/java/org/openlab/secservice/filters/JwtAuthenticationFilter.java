@@ -2,6 +2,7 @@ package org.openlab.secservice.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -44,12 +47,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Algorithm algorithm = Algorithm.HMAC256("mySecret123");
         String jwtAccessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toList()))
+                .withClaim("roles", user.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
                 .sign(algorithm);
-        response.setHeader("Authorization", jwtAccessToken);
-        System.out.println(jwtAccessToken);
 
+        String jwtRefreshToken = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .sign(algorithm);
+
+        Map<String, String> tokenMap = new HashMap<String, String>() {
+            {
+                put("access-token", jwtAccessToken);
+                put("refresh-token", jwtRefreshToken);
+            }
+        };
+        response.setContentType("application/json");
+        new ObjectMapper().writeValue(response.getOutputStream(), tokenMap);
     }
 }
