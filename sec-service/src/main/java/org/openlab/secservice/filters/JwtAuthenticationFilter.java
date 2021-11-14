@@ -3,6 +3,7 @@ package org.openlab.secservice.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.openlab.secservice.JWTUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,17 +45,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("successful auth");
         User user = (User) authResult.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("mySecret123");
+        Algorithm algorithm = Algorithm.HMAC256(JWTUtil.SECRET);
         String jwtAccessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWTUtil.EXPIRED_ACCESS_TOKEN))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String jwtRefreshToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWTUtil.EXPIRED_REFRESH_TOKEN))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 

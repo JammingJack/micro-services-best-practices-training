@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.openlab.secservice.JWTUtil;
 import org.openlab.secservice.entities.AppRole;
 import org.openlab.secservice.entities.AppUser;
 import org.openlab.secservice.services.AccountService;
@@ -59,18 +60,18 @@ public class AccountRestController {
 
     @GetMapping(path="/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        String authorizationToken = request.getHeader("Authorization");
-        if(authorizationToken!=null && authorizationToken.startsWith("Bearer ")){
+        String authorizationToken = request.getHeader(JWTUtil.AUTH_HEADER);
+        if(authorizationToken!=null && authorizationToken.startsWith(JWTUtil.PREFREX)){
             try{
                 String jwt = authorizationToken.substring(7);
-                Algorithm algorithm = Algorithm.HMAC256("mySecret123");
+                Algorithm algorithm = Algorithm.HMAC256(JWTUtil.SECRET);
                 JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
                 String username = decodedJWT.getSubject();
                 AppUser appUser = accountService.loadUserByUserName(username);
                 String jwtAccessToken = JWT.create()
                         .withSubject(appUser.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+1*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis()+JWTUtil.EXPIRED_ACCESS_TOKEN))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", appUser.getAppRoles().stream().map(role -> role.getRoleName()).collect(Collectors.toList())).sign(algorithm);
                 Map<String, String> tokenMap = new HashMap<String, String>() {

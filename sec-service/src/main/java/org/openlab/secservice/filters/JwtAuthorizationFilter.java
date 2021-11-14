@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.openlab.secservice.JWTUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,10 +30,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }else{
 
             String authorizationToken = request.getHeader("Authorization");
-            if(authorizationToken!=null && authorizationToken.startsWith("Bearer ")){
+            if(authorizationToken!=null && authorizationToken.startsWith(JWTUtil.PREFREX)){
                 try{
-                    String jwt = authorizationToken.substring(7);
-                    Algorithm algorithm = Algorithm.HMAC256("mySecret123");
+                    String jwt = authorizationToken.substring(JWTUtil.PREFREX.length());
+                    Algorithm algorithm = Algorithm.HMAC256(JWTUtil.SECRET);
                     JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
                     String username = decodedJWT.getSubject();
